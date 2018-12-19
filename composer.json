@@ -1,0 +1,17 @@
+{
+    "name": "cerpus/cerpushelper",
+    "description": "Base package for common components",
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "kamermans/guzzle-oauth2-subscriber": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "authors": [
+        {
+            "name": "Thomas Horn Sivertsen",
+            "email": "thomass@cerpus.com"
+        }
+    ]
+}
