@@ -8,6 +8,8 @@ use Cerpus\Helper\Traits\CreateTrait;
 /**
  * Class OauthSetup
  * @package Cerpus\Helper\DataObjects
+ *
+ * @method static OauthSetup create($attributes = null)
  */
 class OauthSetup
 {
