@@ -20,12 +20,12 @@ class Oauth2Client implements HelperClientContract
 {
     /**
      * @param OauthSetup $config
-     * @return ClientInterface
+     * @return Client
      */
     public static function getClient(OauthSetup $config): ClientInterface
     {
         $reauth_client = new Client([
-            'base_uri' => $config->authUrl . "/oauth/token",
+            'base_uri' => $config->authUrl,
         ]);
         $reauth_config = [
             "client_id" => $config->key,
