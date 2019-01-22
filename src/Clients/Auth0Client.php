@@ -5,17 +5,14 @@ namespace Cerpus\Helper\Clients;
 
 use Auth0\SDK\API\Authentication;
 use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
-use Auth0\SDK\JWTVerifier;
-use Cerpus\Helper\DataObjects\OauthSetup;
+use Auth0\SDK\Exception\ApiException;
 use Cerpus\Helper\Contracts\HelperClientContract;
-use Cerpus\Helper\Middleware\Auth0Middleware;
+use Cerpus\Helper\DataObjects\OauthSetup;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\RequestOptions;
-use kamermans\OAuth2\GrantType\RefreshToken;
-use kamermans\OAuth2\OAuth2Middleware;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -26,7 +23,7 @@ class Auth0Client implements HelperClientContract
 {
     /**
      * @param OauthSetup $config
-     * @return ClientInterface
+     * @return Client
      */
     public static function getClient(OauthSetup $config): ClientInterface
     {
@@ -55,32 +52,27 @@ class Auth0Client implements HelperClientContract
                 RequestInterface $request,
                 array $options
             ) use ($handler, $config) {
-                $parsedUrl = parse_url($config->authUrl);
-                $domain = array_key_exists('host', $parsedUrl) ? $parsedUrl['host'] : $config->authUrl;
-                $auth0_api = new Authentication($domain, $config->key, $config->secret, $config->audience);
+                $cacheKey = md5($config->toJson());
+                if (!\Cache::has($cacheKey)) {
+                    $parsedUrl = parse_url($config->authUrl);
+                    $domain = array_key_exists('host', $parsedUrl) ? $parsedUrl['host'] : $config->authUrl;
+                    $auth0_api = new Authentication($domain, $config->key, $config->secret, $config->audience);
 
-                try {
-                    $result = $auth0_api->client_credentials([]);
-                } catch (ClientException $e) {
-                    echo 'Caught: ClientException - ' . $e->getMessage();
-                } catch (ApiException $e) {
-                    echo 'Caught: ApiException - ' . $e->getMessage();
+                    try {
+                        $result = $auth0_api->client_credentials([]);
+                    } catch (ClientException $e) {
+                        \Log::error('Caught: ClientException - ' . $e->getMessage());
+                        throw $e;
+                    } catch (ApiException $e) {
+                        \Log::error('Caught: ApiException - ' . $e->getMessage());
+                        throw $e;
+                    }
+
+                    $expire = !empty($result['expire']) ? ($result['expire'] / 60) - 1 : null;
+                    \Cache::put($cacheKey, $result['access_token'], $expire);
                 }
 
-                try {
-                    $verifier = new JWTVerifier([
-                        'supported_algs' => ['RS256'],
-                        'valid_audiences' => [$config->audience],
-                        'authorized_iss' => [sprintf('https://%s/', $domain)]
-                    ]);
-
-                    $decodedToken = $verifier->verifyAndDecode($result['access_token']);
-                }
-                catch(\Auth0\SDK\Exception\CoreException $e) {
-                    throw $e;
-                }
-
-                $header = new AuthorizationBearer($result['access_token']);
+                $header = new AuthorizationBearer(\Cache::get($cacheKey));
                 $request = $request->withHeader($header->getHeader(), $header->getValue());
                 return $handler($request, $options);
             };
