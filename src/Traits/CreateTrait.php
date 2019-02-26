@@ -15,6 +15,8 @@ trait CreateTrait
     public $wasRecentlyCreated = false;
     private $isDirty = false;
 
+    public $metaProperties = ['wasRecentlyCreated', 'isDirty'];
+
     /**
      * @param mixed $attributes
      * @return CreateTrait
@@ -60,17 +62,30 @@ trait CreateTrait
     }
 
     /**
+     * @param mixed $includeMetaProperties
      * @return array
      */
-    public function toArray()
+    public function toArray($includeMetaProperties = false)
     {
         $returnArray = [];
         $properties = get_object_vars($this);
+        $metaProperties = $includeMetaProperties === true ? [] : $this->metaProperties;
+        if (!is_null($includeMetaProperties) && !is_bool($includeMetaProperties)) {
+            if (is_string($includeMetaProperties)) {
+                $metaProperties = array_diff($this->metaProperties, explode(",", $includeMetaProperties));
+            } elseif (is_array($includeMetaProperties)) {
+                $metaProperties = $includeMetaProperties;
+            }
+        }
+        foreach ($metaProperties as $index => $field) {
+            unset($properties[$field]);
+        }
+        unset($properties['metaProperties']);
         foreach ($properties as $property => $value) {
             if ($this->$property instanceof Collection) {
-                $returnArray[$property] = $this->$property->map(function ($element) {
+                $returnArray[$property] = $this->$property->map(function ($element) use ($includeMetaProperties) {
                     if (method_exists($element, "toArray")) {
-                        return $element->toArray();
+                        return $element->toArray($includeMetaProperties);
                     } else {
                         return $element;
                     }
