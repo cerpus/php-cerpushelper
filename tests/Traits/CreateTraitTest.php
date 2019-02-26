@@ -2,8 +2,8 @@
 
 namespace Cerpus\HelperTests\Traits;
 
-use Cerpus\HelperTests\Utils\HelperTestCase;
 use Cerpus\Helper\Traits\CreateTrait;
+use Cerpus\HelperTests\Utils\HelperTestCase;
 use Cerpus\HelperTests\Utils\Traits\WithFaker;
 
 class Truck
@@ -124,6 +124,8 @@ class CreateTraitTest extends HelperTestCase
         $cargo = Cargo::create([
             'weight' => $weight
         ]);
+        $this->assertTrue($truck->isDirty());
+        $this->assertTrue($secondTruck->isDirty());
 
         $truck->addCargo($cargo);
         $secondTruck->addCargo($cargo);
@@ -146,8 +148,63 @@ class CreateTraitTest extends HelperTestCase
             'isDirty' => true,
         ];
 
-        $this->assertEquals($toArray, $truck->toArray());
-        $this->assertEquals($toArray, $secondTruck->toArray());
+        $toArrayWithoutIsDirty = [
+            'color' => $color,
+            'maxWeight' => $maxWeight,
+            'model' => "UltraSuper GT 3000",
+            'cargo' => [
+                [
+                    'weight' => $weight,
+                    'fragile' => false,
+                    'content' => [],
+                    'wasRecentlyCreated' => false,
+                ]
+            ],
+            'full' => false,
+            'wasRecentlyCreated' => false,
+        ];
+
+        $toArrayWithIsDirty = [
+            'color' => $color,
+            'maxWeight' => $maxWeight,
+            'model' => "UltraSuper GT 3000",
+            'cargo' => [
+                [
+                    'weight' => $weight,
+                    'fragile' => false,
+                    'content' => [],
+                    'isDirty' => true,
+                ]
+            ],
+            'full' => false,
+            'isDirty' => true,
+        ];
+
+        $toArrayWithoutMetaproperties = [
+            'color' => $color,
+            'maxWeight' => $maxWeight,
+            'model' => "UltraSuper GT 3000",
+            'cargo' => [
+                [
+                    'weight' => $weight,
+                    'fragile' => false,
+                    'content' => [],
+                ]
+            ],
+            'full' => false,
+        ];
+
+        $this->assertEquals($toArrayWithoutMetaproperties, $truck->toArray());
+        $this->assertEquals($toArrayWithoutMetaproperties, $secondTruck->toArray());
+
+        $this->assertEquals($toArray, $truck->toArray(true));
+        $this->assertEquals($toArray, $secondTruck->toArray(true));
+
+        $this->assertEquals($toArrayWithIsDirty, $truck->toArray('isDirty'));
+        $this->assertEquals($toArrayWithIsDirty, $secondTruck->toArray('isDirty'));
+
+        $this->assertEquals($toArrayWithoutIsDirty, $truck->toArray(['isDirty']));
+        $this->assertEquals($toArrayWithoutIsDirty, $secondTruck->toArray(['isDirty']));
 
         $content = new Content();
         $content->type = "Glass";
@@ -155,7 +212,16 @@ class CreateTraitTest extends HelperTestCase
 
         $cargo->addContent($content);
         $toArray['cargo'][0]['content'][] = $content;
+        $toArrayWithoutMetaproperties['cargo'][0]['content'][] = $content;
+        $toArrayWithIsDirty['cargo'][0]['content'][] = $content;
+        $toArrayWithoutIsDirty['cargo'][0]['content'][] = $content;
 
-        $this->assertEquals($toArray, $truck->toArray());
+        $this->assertEquals($toArrayWithoutMetaproperties, $truck->toArray());
+        $this->assertEquals($toArray, $truck->toArray(true));
+        $this->assertEquals($toArrayWithIsDirty, $truck->toArray('isDirty'));
+        $this->assertEquals($toArrayWithoutIsDirty, $truck->toArray(['isDirty']));
+
+        $this->assertTrue($truck->isDirty());
+        $this->assertTrue($secondTruck->isDirty());
     }
 }
