@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class HelperTestCase extends TestCase
 {
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->setUpTraits();
