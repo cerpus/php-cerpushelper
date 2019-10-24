@@ -2,8 +2,8 @@
 
 namespace Cerpus\HelperTests\Utils;
 
-use PHPUnit\Framework\TestCase;
 use Cerpus\HelperTests\Utils\Traits\WithFaker;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class HelperTestCase
@@ -14,7 +14,7 @@ use Cerpus\HelperTests\Utils\Traits\WithFaker;
 class HelperTestCase extends TestCase
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->setUpTraits();
