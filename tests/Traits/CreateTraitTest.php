@@ -33,11 +33,6 @@ class Truck
     {
         $this->cargo->push($cargo);
     }
-
-    public function setIsDirty($isDirty)
-    {
-        $this->isDirty = $isDirty;
-    }
 }
 
 class Cargo

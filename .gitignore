@@ -4,3 +4,4 @@ vendor/
 /.phpstorm.meta.php
 /_ide_helper.php
 composer.lock
+/.phpunit.result.cache

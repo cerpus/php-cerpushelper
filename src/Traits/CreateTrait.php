@@ -117,4 +117,9 @@ trait CreateTrait
     {
         return json_encode($this);
     }
+
+    public function setIsDirty($isDirty)
+    {
+        $this->isDirty = $isDirty;
+    }
 }
