@@ -25,5 +25,5 @@ class OauthSetup
      * @var string audience
      * @var string $scope
      */
-    public $key, $secret, $coreUrl, $authUrl, $tokenSecret, $token, $audience, $scope;
+    public $coreKey, $coreSecret, $coreUrl, $authUser, $authSecret, $authUrl, $tokenSecret, $token, $audience, $scope;
 }
