@@ -4,11 +4,12 @@
     "require": {
         "guzzlehttp/guzzle": "^6.3",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
-        "php": "^7.0",
+        "php": "^7.2",
         "guzzlehttp/oauth-subscriber": "^0.3.0",
         "illuminate/support": "^5.3|>=6.0",
-        "ext-json": "^1.4",
-        "auth0/auth0-php": "^5.3"
+        "ext-json": "*",
+        "auth0/auth0-php": "^5.3",
+        "cerpus/cerpusauthlib-core": "^0.0"
     },
     "require-dev": {
         "fzaninotto/faker": ">=1.8",
@@ -30,5 +31,15 @@
         "psr-4": {
             "Cerpus\\HelperTests\\": "tests"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer.cerpus.net/"
+        },
+        {
+            "type" : "composer",
+            "url" : "https://composer-3rdparty.cerpus.net/"
+        }
+    ]
 }
