@@ -4,9 +4,9 @@
     "require": {
         "guzzlehttp/guzzle": "^6.3",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
-        "php": "^7.2",
+        "php": "^7.2|^7.3|^7.4",
         "guzzlehttp/oauth-subscriber": "^0.3.0",
-        "illuminate/support": "^5.3|>=6.0",
+        "illuminate/support": "^5.3|>=6.0|>=7.0",
         "ext-json": "*",
         "auth0/auth0-php": "^5.3",
         "cerpus/cerpusauthlib-core": "^0.0"
@@ -20,6 +20,10 @@
         {
             "name": "Thomas Horn Sivertsen",
             "email": "thomass@cerpus.com"
+        },
+        {
+            "name": "Odd-Arne Johansen",
+            "email": "odd-arne.johansen@cerpus.com"
         }
     ],
     "autoload": {
