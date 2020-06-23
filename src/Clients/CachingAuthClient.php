@@ -23,9 +23,6 @@ class CachingAuthClient
     public function __construct(CerpusAuthService $authService)
     {
         $this->authService = $authService;
-        if (!$authService) {
-            $this->authService = app(CerpusAuthService::class);
-        }
     }
 
     /**
