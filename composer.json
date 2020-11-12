@@ -29,7 +29,10 @@
     "autoload": {
         "psr-4": {
             "Cerpus\\Helper\\": "src"
-        }
+        },
+        "files": [
+            "src/Helpers/Profile.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

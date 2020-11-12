@@ -65,3 +65,22 @@ You can also put it in front of API endpoints and the like to fine tune better.
 To access the requestId in your app 
 
 `$requestId = app("requestId")`
+
+### Profile
+Can support simple profiles in Laravel by adding subdirectories in the config folder and name it with the profile name as folder name.
+Add the config files(or only parts of it) in the profile folder to override the default values. 
+_The name of the files must be identical to the one you want to override._
+```
+|-- config
+    |-- myprofile
+        |-- setting.php
+    |-- setting.php
+```
+
+Then import the "profile" function in the namespace area to use the logic. 
+```php
+use function Cerpus\Helper\Helpers\profile as config;
+```
+This will use the profile values, if found, instead of the default config values.
+
+*Will look for 'app.deploymentEnvironment' in app.php if the function is not provided with a profile*
