@@ -8,7 +8,7 @@
         "guzzlehttp/oauth-subscriber": "*",
         "illuminate/support": "^5.3|>=6.0|>=7.0",
         "ext-json": "*",
-        "auth0/auth0-php": "^5.3",
+        "auth0/auth0-php": "^7.5",
         "cerpus/cerpusauthlib-core": "^0.0"
     },
     "require-dev": {

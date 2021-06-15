@@ -84,3 +84,6 @@ use function Cerpus\Helper\Helpers\profile as config;
 This will use the profile values, if found, instead of the default config values.
 
 *Will look for 'app.deploymentEnvironment' in app.php if the function is not provided with a profile*
+
+### Releases
+1.5.0 Updated to use auth0/auth0-php v7.5
