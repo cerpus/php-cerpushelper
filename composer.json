@@ -5,7 +5,7 @@
         "guzzlehttp/guzzle": "*",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
         "php": "^7.2|^7.3|^7.4",
-        "guzzlehttp/oauth-subscriber": "^0.3.0",
+        "guzzlehttp/oauth-subscriber": "*",
         "illuminate/support": "^5.3|>=6.0|>=7.0",
         "ext-json": "*",
         "auth0/auth0-php": "^5.3",
