@@ -1,7 +1,7 @@
 {
     "name": "cerpus/cerpushelper",
     "description": "Base package for common components",
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-only",
     "require": {
         "guzzlehttp/guzzle": "*",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
