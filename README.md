@@ -3,24 +3,10 @@
 This package contains some useful and common helper utilities for use in Laravel based projects.
 
 ## Installation
-Make sure you have the following in your composer.json
-```$json
-    ...
-"repositories": [
-        {
-            "type": "composer",
-            "url": "https://composer.cerpus.net/"
-        },
-        {
-          "type" : "composer",
-          "url" : "https://composer-3rdparty.cerpus.net/"
-        }
-    ]
-    ...
-```
-To install this package run
-`composer require cerpus/cerpushelper`
-in your project
+
+~~~
+$ composer require cerpus/cerpushelper
+~~~
 
 ## Models/Traits/UuidAsId
 Let you use the primary key as UUID not the default auto incrementing value
@@ -37,14 +23,14 @@ use Cerpus\Helper\Models\Traits\UuidAsId;
 class MyModel extends Authenticatable
 {
     use UuidAsId;
-    
+
     ...
 ```
 
 ## Middleware/RequestId
-Handle RequestId. Pick RequestId from request header and if that does not exist generate a new RequestId. 
+Handle RequestId. Pick RequestId from request header and if that does not exist generate a new RequestId.
 
-Adds the RequestId to response headers. 
+Adds the RequestId to response headers.
 
 Include the RequestId when logging and requests to other systems to easily trace requests through different systems.
 
@@ -54,7 +40,7 @@ In the global middleware of your app  `app/Http/Kernel.php`
   use Cerpus\Helper\Middleware\RequestId;
   ...
   protected $middleware = [
-        RequestId::class, 
+        RequestId::class,
         ...
     ];
 ```
@@ -62,13 +48,13 @@ In the global middleware of your app  `app/Http/Kernel.php`
 You can also put it in front of API endpoints and the like to fine tune better.
 
 ### Usage
-To access the requestId in your app 
+To access the requestId in your app
 
 `$requestId = app("requestId")`
 
 ### Profile
 Can support simple profiles in Laravel by adding subdirectories in the config folder and name it with the profile name as folder name.
-Add the config files(or only parts of it) in the profile folder to override the default values. 
+Add the config files(or only parts of it) in the profile folder to override the default values.
 _The name of the files must be identical to the one you want to override._
 ```
 |-- config
@@ -77,7 +63,7 @@ _The name of the files must be identical to the one you want to override._
     |-- setting.php
 ```
 
-Then import the "profile" function in the namespace area to use the logic. 
+Then import the "profile" function in the namespace area to use the logic.
 ```php
 use function Cerpus\Helper\Helpers\profile as config;
 ```
@@ -87,3 +73,8 @@ This will use the profile values, if found, instead of the default config values
 
 ### Releases
 1.5.0 Updated to use auth0/auth0-php v7.5
+
+## License
+
+This package is released under the GNU General Public License 3.0. See the
+`LICENSE` file for more information.
