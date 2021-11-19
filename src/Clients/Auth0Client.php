@@ -4,7 +4,7 @@ namespace Cerpus\Helper\Clients;
 
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Header\Authorization\AuthorizationBearer;
+use Auth0\SDK\API\Header\AuthorizationBearer;
 use Auth0\SDK\Exception\ApiException;
 use Cerpus\Helper\Contracts\HelperClientContract;
 use Cerpus\Helper\DataObjects\OauthSetup;
