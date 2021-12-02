@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Trait CreateTrait
+ *
  * @package Cerpus\Helper\Traits
  */
 trait CreateTrait
@@ -18,8 +19,11 @@ trait CreateTrait
     public $metaProperties = ['wasRecentlyCreated', 'isDirty'];
 
     /**
-     * @param mixed $attributes
+     * @param  mixed  $attributes
+     *
      * @return CreateTrait
+     * @throws \OutOfRangeException
+     *
      */
     public static function create($attributes = null)
     {
@@ -28,17 +32,28 @@ trait CreateTrait
             return $self;
         }
         $properties = get_object_vars($self);
-        if (!is_array($attributes)) {
+
+        if (! is_array($attributes)) {
             $arguments = func_get_args();
-            $propertiesKeys = array_keys($properties);
             $attributes = [];
+
+            // Only update properties defined in the class directly, not properties inherited or from traits
+            $updatableProperties = $self->removeParentClassProperties($properties);
+            $updatableProperties = $self->removeTraitProperties($updatableProperties);
+
+            if (count($updatableProperties) < count($arguments)) {
+                throw new \OutOfRangeException('More arguments than updatable properties.');
+            }
+
+            $updatablePropertiesNumIndex = array_keys($updatableProperties);
+
             foreach ($arguments as $index => $value) {
-                $property = $propertiesKeys[$index];
+                $property = $updatablePropertiesNumIndex[$index];
                 $attributes[$property] = $value;
             }
         }
         foreach ($attributes as $attribute => $value) {
-            if (!$self->isGuarded($attribute) && array_key_exists($attribute, $properties)) {
+            if (! $self->isGuarded($attribute) && array_key_exists($attribute, $properties)) {
                 $self->isDirty = $self->isDirty || $self->$attribute !== $value;
                 if ($attribute !== 'isDirty') {
                     $self->$attribute = $value;
@@ -49,8 +64,40 @@ trait CreateTrait
         return $self;
     }
 
+    private function removeParentClassProperties(array $properties) :array
+    {
+        if ($parentClass = get_parent_class($this)) {
+            if ($parentClassAttributes = get_class_vars($parentClass)) {
+                foreach ($parentClassAttributes as $key => $value) {
+                    unset($properties[$key]);
+                }
+            }
+        }
+
+        return $properties;
+    }
+
+    private function removeTraitProperties(array $properties) :array
+    {
+        if ($traits = (new \ReflectionClass($this))->getTraitNames()) {
+            foreach ($traits as $trait) {
+                $traitProps = (new \ReflectionClass($trait))->getProperties(\ReflectionProperty::IS_STATIC
+                    | \ReflectionProperty::IS_PROTECTED
+                    | \ReflectionProperty::IS_PRIVATE
+                    | \ReflectionProperty::IS_PUBLIC);
+                foreach ($traitProps as $traitProperty) {
+                    unset($properties[$traitProperty->name]);
+                }
+            }
+        }
+
+
+        return $properties;
+    }
+
     /**
-     * @param string $attribute
+     * @param  string  $attribute
+     *
      * @return bool
      */
     private function isGuarded($attribute)
@@ -58,11 +105,13 @@ trait CreateTrait
         if (strtolower($attribute) === 'guarded') {
             return true;
         }
-        return !empty($this->guarded) && in_array($attribute, $this->guarded);
+
+        return ! empty($this->guarded) && in_array($attribute, $this->guarded);
     }
 
     /**
-     * @param mixed $includeMetaProperties
+     * @param  mixed  $includeMetaProperties
+     *
      * @return array
      */
     public function toArray($includeMetaProperties = false)
@@ -70,11 +119,13 @@ trait CreateTrait
         $returnArray = [];
         $properties = get_object_vars($this);
         $metaProperties = $includeMetaProperties === true ? [] : $this->metaProperties;
-        if (!is_null($includeMetaProperties) && !is_bool($includeMetaProperties)) {
+        if (! is_null($includeMetaProperties) && ! is_bool($includeMetaProperties)) {
             if (is_string($includeMetaProperties)) {
                 $metaProperties = array_diff($this->metaProperties, explode(",", $includeMetaProperties));
-            } elseif (is_array($includeMetaProperties)) {
-                $metaProperties = $includeMetaProperties;
+            } else {
+                if (is_array($includeMetaProperties)) {
+                    $metaProperties = $includeMetaProperties;
+                }
             }
         }
         foreach ($metaProperties as $index => $field) {
@@ -94,6 +145,7 @@ trait CreateTrait
                 $returnArray[$property] = $value;
             }
         }
+
         return $returnArray;
     }
 
@@ -102,11 +154,12 @@ trait CreateTrait
      */
     public function isDirty()
     {
-        if( $this->isDirty === true){
+        if ($this->isDirty === true) {
             return true;
         }
 
         $self = new self();
+
         return $self->toJson() !== $this->toJson();
     }
 
