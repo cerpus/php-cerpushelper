@@ -5,7 +5,7 @@
     "require": {
         "guzzlehttp/guzzle": "*",
         "kamermans/guzzle-oauth2-subscriber": "^1.0",
-        "php": "^7.2|^7.3|^7.4",
+        "php": "^7.4|^8.0",
         "guzzlehttp/oauth-subscriber": "*",
         "illuminate/support": "^5.3|>=6.0|>=7.0",
         "ext-json": "*",
@@ -13,9 +13,9 @@
         "cerpus/cerpusauthlib-core": "^0.0"
     },
     "require-dev": {
-        "fzaninotto/faker": ">=1.8",
         "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^8.0"
+        "fakerphp/faker": "^1.16",
+        "phpunit/phpunit": "^9.5"
     },
     "authors": [
         {

@@ -62,9 +62,34 @@ class Content
     public $name;
 }
 
+class A
+{
+    var $propA;
+}
+
+class B extends A
+{
+    use CreateTrait;
+
+    var $propB;
+}
+
 class CreateTraitTest extends HelperTestCase
 {
     use WithFaker;
+
+    /**
+     * @test
+     */
+    public function CanNotSetParentPropertiesOnInheritedClasses()
+    {
+        $b = B::create(123);
+        $this->assertEquals(123, $b->propB);
+        $this->assertArrayHasKey('propB', $b->toArray());
+
+        $this->expectException(\OutOfRangeException::class);
+        B::create(123, 456);
+    }
 
     /**
      * @test
@@ -93,7 +118,7 @@ class CreateTraitTest extends HelperTestCase
         $truck2 = Truck::create([
             'color' => $color,
             'maxWeight' => $maxWeight,
-            'full' => true
+            'full' => true,
         ]);
         $this->assertEquals($truck, $truck2);
     }
@@ -117,7 +142,7 @@ class CreateTraitTest extends HelperTestCase
 
         /** @var Cargo $cargo */
         $cargo = Cargo::create([
-            'weight' => $weight
+            'weight' => $weight,
         ]);
         $this->assertTrue($truck->isDirty());
         $this->assertTrue($secondTruck->isDirty());
@@ -136,7 +161,7 @@ class CreateTraitTest extends HelperTestCase
                     'content' => [],
                     'wasRecentlyCreated' => false,
                     'isDirty' => true,
-                ]
+                ],
             ],
             'full' => false,
             'wasRecentlyCreated' => false,
@@ -153,7 +178,7 @@ class CreateTraitTest extends HelperTestCase
                     'fragile' => false,
                     'content' => [],
                     'wasRecentlyCreated' => false,
-                ]
+                ],
             ],
             'full' => false,
             'wasRecentlyCreated' => false,
@@ -169,7 +194,7 @@ class CreateTraitTest extends HelperTestCase
                     'fragile' => false,
                     'content' => [],
                     'isDirty' => true,
-                ]
+                ],
             ],
             'full' => false,
             'isDirty' => true,
@@ -184,7 +209,7 @@ class CreateTraitTest extends HelperTestCase
                     'weight' => $weight,
                     'fragile' => false,
                     'content' => [],
-                ]
+                ],
             ],
             'full' => false,
         ];
