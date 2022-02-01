@@ -135,7 +135,7 @@ trait CreateTrait
         foreach ($properties as $property => $value) {
             if ($this->$property instanceof Collection) {
                 $returnArray[$property] = $this->$property->map(function ($element) use ($includeMetaProperties) {
-                    if (method_exists($element, "toArray")) {
+                    if (is_callable([$element, "toArray"])) {
                         return $element->toArray($includeMetaProperties);
                     } else {
                         return $element;
