@@ -4,13 +4,12 @@ on: [push, pull_request]
 
 jobs:
     phpunit:
-        name: PHPUnit (PHP ${{ matrix.php-version }}, Laravel ${{ matrix.laravel-constraint }}
+        name: PHPUnit (PHP ${{ matrix.php-version }}, Laravel ${{ matrix.laravel-constraint }})
         runs-on: ubuntu-20.04
 
         strategy:
             fail-fast: false
             matrix:
-                guzzle-constraint: ['^7.0']
                 include:
                     -   php-version: '7.4'
                         laravel-constraint: '^8.0'
@@ -18,15 +17,19 @@ jobs:
 
                     -   php-version: '8.0'
                         laravel-constraint: '^8.0'
+                        guzzle-constraint: '^7.0'
 
                     -   php-version: '8.0'
                         laravel-constraint: '^9.0'
+                        guzzle-constraint: '^7.0'
 
                     -   php-version: '8.1'
                         laravel-constraint: '^8.0'
+                        guzzle-constraint: '^7.0'
 
                     -   php-version: '8.1'
                         laravel-constraint: '^9.0'
+                        guzzle-constraint: '^7.0'
 
         steps:
             -   name: Checkout
