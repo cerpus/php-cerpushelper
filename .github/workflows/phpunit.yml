@@ -10,7 +10,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                guzzle-constraint: '^7.0'
+                guzzle-constraint: ['^7.0']
                 include:
                     -   php-version: '7.4'
                         laravel-constraint: '^8.0'
