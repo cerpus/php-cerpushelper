@@ -3,18 +3,18 @@
     "description": "Base package for common components",
     "license": "GPL-3.0-only",
     "require": {
-        "guzzlehttp/guzzle": "*",
-        "kamermans/guzzle-oauth2-subscriber": "^1.0",
         "php": "^7.4|^8.0",
-        "guzzlehttp/oauth-subscriber": "*",
-        "illuminate/support": "^5.3|>=6.0|>=7.0",
         "ext-json": "*",
         "auth0/auth0-php": "^7.5",
-        "cerpus/cerpusauthlib-core": "^0.0"
+        "cerpus/cerpusauthlib-core": "^0.0",
+        "guzzlehttp/guzzle": "^6.0|^7.0",
+        "guzzlehttp/oauth-subscriber": "^0.6.0",
+        "illuminate/support": "^8.0|^9.0",
+        "kamermans/guzzle-oauth2-subscriber": "^1.0"
     },
     "require-dev": {
-        "mockery/mockery": "^1.0",
         "fakerphp/faker": "^1.16",
+        "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^9.5"
     },
     "authors": [
