@@ -4,8 +4,8 @@ namespace Cerpus\Helper\Clients;
 
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Header\AuthorizationBearer;
-use Auth0\SDK\Exception\ApiException;
+use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\Auth0Exception;
 use Cerpus\Helper\Contracts\HelperClientContract;
 use Cerpus\Helper\DataObjects\OauthSetup;
 use GuzzleHttp\Client;
@@ -56,15 +56,21 @@ class Auth0Client implements HelperClientContract
                 if (!\Cache::has($cacheKey)) {
                     $parsedUrl = parse_url($config->authUrl);
                     $domain = array_key_exists('host', $parsedUrl) ? $parsedUrl['host'] : $config->authUrl;
-                    $auth0_api = new Authentication($domain, $config->key, $config->secret, $config->audience);
+                    $sdkConfig = new SdkConfiguration(
+                        domain: $domain,
+                        clientId: $config->key,
+                        clientSecret: $config->secret,
+                        audience: $config->audience ? [$config->audience] : null,
+                    );
+                    $auth0_api = new Authentication($sdkConfig);
 
                     try {
-                        $result = $auth0_api->client_credentials([]);
+                        $result = $auth0_api->clientCredentials([]);
                     } catch (ClientException $e) {
                         \Log::error('Caught: ClientException - ' . $e->getMessage());
                         throw $e;
-                    } catch (ApiException $e) {
-                        \Log::error('Caught: ApiException - ' . $e->getMessage());
+                    } catch (Auth0Exception $e) {
+                        \Log::error('Caught: Auth0Exception - ' . $e->getMessage());
                         throw $e;
                     }
 
@@ -72,8 +78,8 @@ class Auth0Client implements HelperClientContract
                     \Cache::put($cacheKey, $result['access_token'], $expire);
                 }
 
-                $header = new AuthorizationBearer(\Cache::get($cacheKey));
-                $request = $request->withHeader($header->getHeader(), $header->getValue());
+                $token = \Cache::get($cacheKey);
+                $request = $request->withHeader('Authorization', 'Bearer '.$token);
                 return $handler($request, $options);
             };
         };

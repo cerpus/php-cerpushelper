@@ -11,10 +11,6 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    -   php-version: '7.4'
-                        laravel-constraint: '^8.0'
-                        guzzle-constraint: '^6.0'
-
                     -   php-version: '8.0'
                         laravel-constraint: '^8.0'
                         guzzle-constraint: '^7.0'
@@ -33,6 +29,10 @@ jobs:
 
                     -   php-version: '8.2'
                         laravel-constraint: '^9.0'
+                        guzzle-constraint: '^7.0'
+
+                    -   php-version: '8.2'
+                        laravel-constraint: '^10.0'
                         guzzle-constraint: '^7.0'
 
         steps:
